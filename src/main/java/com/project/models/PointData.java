@@ -3,9 +3,9 @@ package com.project.models;
 import lombok.Data;
 
 @Data
-public class Greeting {
+public class PointData {
 
-    private final long id;
-    private final String content;
+    private final double lat;
+    private final double lng;
 
 }
