@@ -21,7 +21,7 @@ import javax.persistence.Table;
 public class Point {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID")
     private Integer id;
     @Column(name = "NAME")
