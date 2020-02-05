@@ -51,7 +51,7 @@ class GoogleGeoService {
             logger.debug("CITY : " + getCity(address));
 
             return getCity(address);
-        } catch (IOException e) {
+        } catch (Exception e) {
 
             logger.error(e.getMessage());
 
