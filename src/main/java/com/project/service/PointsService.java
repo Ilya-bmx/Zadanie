@@ -1,13 +1,16 @@
 package com.project.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import com.project.entities.Point;
+import com.project.entities.SalePointSpecific;
+import com.project.models.PointSpecificInfo;
 import com.project.models.SalePoint;
 import com.project.repos.PointsRepository;
+import com.project.repos.SalePointSpecificRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,19 +18,34 @@ import java.util.stream.Collectors;
 public class PointsService {
 
     @Autowired
+    SalePointSpecificRepository salePointSpecificRepository;
+    @Autowired
     PointsRepository pointsRepository;
     @Autowired
     GoogleGeoService googleGeoService;
 
-    public PointsService() {
+    @Transactional
+    public void savePointSpecificInfo(PointSpecificInfo info) {
+        salePointSpecificRepository.save(
+                SalePointSpecific.builder()
+                        .id(info.getId())
+                        .label(info.getLabel())
+                        .build()
+        );
+        System.out.println(pointsRepository.findAll());
+        System.out.println(salePointSpecificRepository.findAll());
     }
 
-    public String getSalePointsAsBody(String lat, String lng) throws JsonProcessingException {
+    @Transactional
+    public void addSalePoint(SalePoint point) {
+        Point entityPoint = createEntityPoint(point);
+        pointsRepository.save(entityPoint);
+    }
+
+    public List<SalePoint> getSalePointsAsBody(String lat, String lng) {
         List<SalePoint> salePoints = getSalePoints(lat, lng);
-        if (salePoints.isEmpty()) return "WE ARE SORRY, BUT HERE NO SALE POINTS ((";
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.enable(SerializationFeature.INDENT_OUTPUT);
-        return mapper.writeValueAsString(salePoints);
+        if (salePoints.isEmpty()) throw new RuntimeException("WE ARE SORRY, BUT HERE NO SALE POINTS ((");
+        return salePoints;
     }
 
     private List<SalePoint> getSalePoints(String lat, String lng) {
@@ -46,4 +64,12 @@ public class PointsService {
                 .collect(Collectors.toList());
     }
 
+
+    private Point createEntityPoint(SalePoint point) {
+        return Point.builder()
+                .name(point.getName())
+                .city(point.getCity())
+                .address(point.getAddress())
+                .build();
+    }
 }

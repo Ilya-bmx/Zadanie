@@ -18,4 +18,13 @@ public class GoogleGeoServiceTest {
     public void getPointCity() {
         assertEquals("Moscow", googleGeoService.getPointCity());
     }
+
+    @Test
+    public void easyTest() {
+        System.out.println("https://maps.googleapis.com/maps/api/place/textsearch/json?" +
+                "&type=locality" +
+                "&fields=formatted_address" +
+                "&radius=5000" +
+                "&ipbias");
+    }
 }

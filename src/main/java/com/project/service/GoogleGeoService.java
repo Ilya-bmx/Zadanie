@@ -6,6 +6,7 @@ import com.project.models.GoogleResponse;
 import com.project.models.Results;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -21,19 +22,12 @@ import static com.project.utils.BusinnessStrings.getCity;
 @Service
 class GoogleGeoService {
     private static final Logger logger = LoggerFactory.getLogger(GoogleGeoService.class.getName());
-    private static final String GOOGLE_MAP_URL =
-            "https://maps.googleapis.com/maps/api/place/textsearch/json?query=city_hall" +
-                    "&type=city_hall" +
-                    "&fields=formatted_address" +
-                    "&radius=5000" +
-                    "&location=";
-    private static final String API_KEY = "&key=AIzaSyBNIvHHcY8aMNH2FjuL2CqzbUr5L0On9gw";
-    private static final String GOOGLE_MAP_URL_BIAS =
-            "https://maps.googleapis.com/maps/api/place/textsearch/json?" +
-                    "&type=locality" +
-                    "&fields=formatted_address" +
-                    "&radius=5000" +
-                    "&ipbias";
+    @Value("${googleMapUrl}")
+    private String GOOGLE_MAP_URL;
+    @Value("${googleApiKey}")
+    private String API_KEY;
+    @Value("${googleMapUrlBias}")
+    private String GOOGLE_MAP_URL_BIAS;
 
     public GoogleGeoService() {
     }
