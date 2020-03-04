@@ -4,25 +4,38 @@ import com.project.entities.Point;
 import com.project.entities.SalePointSpecific;
 import com.project.models.PointSpecificInfo;
 import com.project.models.SalePoint;
+import com.project.models.SalePointInfo;
+import com.project.provider.BusinessException;
 import com.project.repos.PointsRepository;
 import com.project.repos.SalePointSpecificRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.Optional.ofNullable;
+
+@RequiredArgsConstructor
 @Service
 public class PointsService {
 
-    @Autowired
-    SalePointSpecificRepository salePointSpecificRepository;
-    @Autowired
-    PointsRepository pointsRepository;
-    @Autowired
-    GoogleGeoService googleGeoService;
+    private final SalePointSpecificRepository salePointSpecificRepository;
+    private final PointsRepository pointsRepository;
+    private final GoogleGeoService googleGeoService;
+
+    public List<SalePointInfo> getAllExistPoints() {
+        return pointsRepository.findAll()
+                .stream()
+                .map(salePoint -> new SalePointInfo(
+                        salePoint.getId(),
+                        salePoint.getName(),
+                        salePoint.getCity(),
+                        salePoint.getAddress(),
+                        getPointSpecificInfo(salePoint)))
+                .collect(Collectors.toList());
+    }
 
     @Transactional
     public void savePointSpecificInfo(PointSpecificInfo info) {
@@ -42,9 +55,9 @@ public class PointsService {
         pointsRepository.save(entityPoint);
     }
 
-    public List<SalePoint> getSalePointsAsBody(String lat, String lng) {
+    public List<SalePoint> getSalePointsAsBody(String lat, String lng) throws BusinessException {
         List<SalePoint> salePoints = getSalePoints(lat, lng);
-        if (salePoints.isEmpty()) throw new RuntimeException("WE ARE SORRY, BUT HERE NO SALE POINTS ((");
+        if (salePoints.isEmpty()) throw new BusinessException("WE ARE SORRY, BUT HERE NO SALE POINTS ((");
         return salePoints;
     }
 
@@ -71,5 +84,11 @@ public class PointsService {
                 .city(point.getCity())
                 .address(point.getAddress())
                 .build();
+    }
+
+    private PointSpecificInfo getPointSpecificInfo(Point point) {
+        return ofNullable(point.getSalePointSpecific())
+                .map(pointObj -> new PointSpecificInfo(pointObj.getId(),pointObj.getLabel()))
+                .orElse(null);
     }
 }

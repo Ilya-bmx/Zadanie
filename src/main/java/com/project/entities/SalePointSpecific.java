@@ -20,9 +20,9 @@ import javax.ws.rs.DefaultValue;
 @Data
 @Builder
 @Table(name = "SalePoint")
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class SalePointSpecific {
     @Id
     @Column(name = "id")
@@ -33,3 +33,4 @@ public class SalePointSpecific {
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "salePointSpecific")
     private Point point;
 }
+

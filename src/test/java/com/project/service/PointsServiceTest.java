@@ -37,7 +37,7 @@ public class PointsServiceTest {
     }
 
     @Test
-    public void getSalePointsAsBody_SUccess() {
+    public void getSalePointsAsBody_SUccess() throws Exception {
         assertEquals(pointsService.getSalePointsAsBody("1", "0"), ("[ {\n" +
                 "  \"id\" : null,\n" +
                 "  \"name\" : \"Preo8\",\n" +
@@ -52,7 +52,7 @@ public class PointsServiceTest {
     }
 
     @Test
-    public void getSalePointsAsBody_Success_NUll_Params() {
+    public void getSalePointsAsBody_Success_NUll_Params() throws Exception {
         assertEquals(pointsService.getSalePointsAsBody(null, null), ("[ {\n" +
                 "  \"id\" : null,\n" +
                 "  \"name\" : \"Preo8\",\n" +
