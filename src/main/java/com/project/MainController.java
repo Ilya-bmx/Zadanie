@@ -8,9 +8,11 @@ import com.project.service.PointsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -49,15 +51,24 @@ public class MainController {
         return pointsService.getAllExistPoints();
     }
 
+    @Produces(MediaType.APPLICATION_JSON)
     @GET
-    public Response checkHealth() throws BusinessException {
-        throw new BusinessException("AAAA");
-        /*return "You are now on the first page \n " +
+    public String checkHealth() {
+        return "You are now on the first page \n " +
                 "Use that paths: \n" +
                 "/allPoints @GET \n" +
                 "/pointInfo @PUT \n" +
                 "/points @GET lat long\n" +
-                "/point @PUT SalePoint \n";*/
+                "/point @PUT SalePoint \n";
     }
+
+    // test delete it
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/point")
+    @POST
+    public void addSalePointPost(SalePoint point) {
+        pointsService.addSalePoint(point);
+    }
+
 
 }
