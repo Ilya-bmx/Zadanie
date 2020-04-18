@@ -51,6 +51,7 @@ public class PointsService {
 
     @Transactional
     public void addSalePoint(SalePoint point) {
+        // TODO: поинт нуловым быть не должен
         Point entityPoint = createEntityPoint(point);
         pointsRepository.save(entityPoint);
     }
